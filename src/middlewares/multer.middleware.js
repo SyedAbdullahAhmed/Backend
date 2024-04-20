@@ -1,11 +1,10 @@
 import multer from "multer";
 
-const storage = multer.diskStorage({// sue dist storage or memeory storage
+const storage = multer.diskStorage({// use dist storage or memeory storage
     destination: function (req, file, cb) {
-      cb(null, "./public/temp") // file is on server while uploading on cloudinary 
+      cb(null, "./public/temp") // file is on server before uploading on cloudinary 
     },
     filename: function (req, file, cb) {
-      
       cb(null, file.originalname)
     }
   })
@@ -13,3 +12,19 @@ const storage = multer.diskStorage({// sue dist storage or memeory storage
 export const upload = multer({ 
     storage, 
 })
+
+// import multer from "multer";
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, "./public/temp")
+//     },
+//     filename: function (req, file, cb) {
+      
+//       cb(null, file.originalname)
+//     }
+//   })
+  
+// export const upload = multer({ 
+//     storage, 
+// })

@@ -1,0 +1,119 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Chai-aur-backend",
+    "dateExported": "2024-04-20T22:17:51.117Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "d6238df5-0a24-41f5-a577-f0ccafb1815e",
+            "name": "user",
+            "containerId": "",
+            "created": "2024-04-20T21:23:51.786Z",
+            "sortNum": 10000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "eb5154f8-af9d-4154-8406-5ff6c757a681",
+            "colId": "736bfd5b-ec06-4e4b-bec4-ec273c3b67af",
+            "containerId": "d6238df5-0a24-41f5-a577-f0ccafb1815e",
+            "name": "registerUser",
+            "url": "http://localhost:2000/api/v1/users/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-20T21:24:09.705Z",
+            "modified": "2024-04-20T21:26:44.692Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "username",
+                        "value": "Abdullah"
+                    },
+                    {
+                        "name": "email",
+                        "value": "abdullahahmedsyed65@gmail.com"
+                    },
+                    {
+                        "name": "fullName",
+                        "value": "Syed Abdullah"
+                    },
+                    {
+                        "name": "password",
+                        "value": "12345678"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "avatar",
+                        "value": "/home/user/api-demo/public/images/avatar.jpg"
+                    },
+                    {
+                        "name": "coverImage",
+                        "value": "/home/user/api-demo/public/images/avatar1.jpg"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "bfd7b142-7217-48b0-ba19-218af34988b6",
+            "colId": "736bfd5b-ec06-4e4b-bec4-ec273c3b67af",
+            "containerId": "d6238df5-0a24-41f5-a577-f0ccafb1815e",
+            "name": "loginUser",
+            "url": "http://localhost:2000/api/v1/users/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-04-20T21:26:59.415Z",
+            "modified": "2024-04-20T21:29:27.157Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\" : \"abdullahahmedsyed65@gmail.com\",\n  \"username\" : \"abdu\",\n  \"password\" : \"12345678\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "f36afc16-6f84-4a2b-ba6a-c86b697e2071",
+            "colId": "736bfd5b-ec06-4e4b-bec4-ec273c3b67af",
+            "containerId": "d6238df5-0a24-41f5-a577-f0ccafb1815e",
+            "name": "logoutUser",
+            "url": "http://localhost:2000/api/v1/users/logout",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-04-20T21:44:55.447Z",
+            "modified": "2024-04-20T21:46:09.190Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjIzZTI3Yjk3ODEzYjhjZGJlMmI0NzUiLCJlbWFpbCI6ImFiZHVsbGFoYWhtZWRzeWVkNjVAZ21haWwuY29tIiwidXNlcm5hbWUiOiJhYmR1IiwiZnVsbE5hbWUiOiJTeWVkIEFiZHVsbGFoIEFobWVkIiwiaWF0IjoxNzEzNjQ5MjQyLCJleHAiOjE3MTM3MzU2NDJ9.1iPiALtseB9z18ARsGpHJuV5EHXORtmvnOAG3aABJuM"
+            },
+            "tests": []
+        },
+        {
+            "_id": "74cf53a9-9465-4feb-88f1-28b289766d5b",
+            "colId": "736bfd5b-ec06-4e4b-bec4-ec273c3b67af",
+            "containerId": "d6238df5-0a24-41f5-a577-f0ccafb1815e",
+            "name": "refresh-token",
+            "url": "http://localhost:2000/api/v1/users/refresh-token",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-04-20T21:51:46.723Z",
+            "modified": "2024-04-20T22:15:30.292Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"refreshToken\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjIzZTI3Yjk3ODEzYjhjZGJlMmI0NzUiLCJpYXQiOjE3MTM2NTEzMDAsImV4cCI6MTcxNDUxNTMwMH0.xWLUFXOjZ0v02vFsWt8GS56N_2Fdg4lwgXwRW3RALkg\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}

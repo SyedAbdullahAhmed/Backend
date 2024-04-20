@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken"
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -46,7 +48,7 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 // we use normal function bcz it gives access of this(schema data) keyword 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return;
 
     this.password = await bcrypt.hash(this.password, 10);
@@ -54,11 +56,11 @@ userSchema.pre('save', async function(next) {
 })
 
 // we insert many cutomize function is methods
-userSchema.methods.isPasswordCorrect = async function(password){
+userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAccessToken = function(){
+userSchema.methods.generateAccessToken = async function () {
     return jwt.sign(
         {
             _id: this._id,
@@ -72,11 +74,11 @@ userSchema.methods.generateAccessToken = function(){
         }
     )
 }
-userSchema.methods.generateRefreshToken = function(){
+userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-            
+
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
