@@ -2,6 +2,7 @@ import { asyncHandler } from '../utils/asyncHandler.js'
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { User } from "../models/user.models.js"
+import { Video } from "../models/video.models.js"
 import { uploadImageOnCloudinary } from '../utils/cloudinary.js'
 import jwt from "jsonwebtoken"
 import { options } from '../constants.js'
@@ -69,7 +70,11 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // we donot use optional chaining because coverImage is not required
     let coverImageLocalPath;
-    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    if (
+        req.files &&
+        Array.isArray(req.files.coverImage) &&
+        req.files.coverImage.length > 0
+    ) {
         coverImageLocalPath = req.files.coverImage[0].path
     }
 
@@ -383,6 +388,74 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         )
 })
 
+const addVideoToWatchHistory = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+
+    const video = await Video.findById(videoId)
+
+    if (!video) {
+        throw new ApiError(404, "Video not found")
+    }
+
+    if (
+        !(video.owner === req.user?._id)
+    ) {
+        throw new ApiError(403, "You are not allowed to add this video to watch history")
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $push: {
+                watchHistory: videoId
+            }
+        },
+        { new: true }
+    )
+
+    if (!updatedUser) {
+        throw new ApiError(500, "Something went wrong while adding video to watch history")
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, updatedUser, "Video added to watch history"))
+})
+const removeVideoFromWatchHistory = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+
+    const video = await Video.findById(videoId)
+
+    if (!video) {
+        throw new ApiError(404, "Video not found")
+    }
+
+    if (
+        !(video.owner === req.user?._id)
+    ) {
+        throw new ApiError(403, "You are not allowed to add this video to watch history")
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $pull: {
+                watchHistory: videoId
+            }
+        },
+        { new: true }
+    )
+
+    if (!updatedUser) {
+        throw new ApiError(500, "Something went wrong while removing video to watch history")
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, updatedUser, "Video removed from watch history"))
+}
+
+)
 export {
     registerUser,
     loginUser,
@@ -392,5 +465,7 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    addVideoToWatchHistory,
+    removeVideoFromWatchHistory
 }

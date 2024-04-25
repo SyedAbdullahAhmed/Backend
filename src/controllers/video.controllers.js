@@ -5,18 +5,22 @@ import { Video } from "../models/video.models.js"
 import { uploadVideoOnCloudinary,uploadImageOnCloudinary } from '../utils/cloudinary.js'
 import {deleteVideoFromCloudinary,deleteImageFromCloudinary} from '../utils/deleteCloudinaryAssets.js'
 
+// TODO
 const getAllVideos = asyncHandler(async (req, res) => {
 
     // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
     //TODO: get all videos based on query, sort, pagination
 
-    // const videos = await Video.find({})
+    const videos = await Video.find({})
 
-    // return res
-    //     .status(200)
-    //     .json(
-    //         new ApiResponse(200, videos, "Videos fetched successfully!")
-    //     )
+    if (videos.length === 0) {
+        throw new ApiError(404, 'No videos found!!')
+    }
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, videos, "Videos fetched successfully!")
+        )
 })
 
 const getVideoById = asyncHandler(async (req, res) => {
@@ -26,7 +30,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     // find video
     const video = await Video.findById(videoId)
 
-    if (!findVideo) {
+    if (!video) {
         throw new ApiError(404, 'Video not found!!')
     }
 
@@ -41,7 +45,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     // get body and validate
     const { title, description } = req.body
 
-    if (!title || !description) {
+    if (!title && !description) {
         throw new ApiError(400, 'title and description are required!!')
     }
 
@@ -67,7 +71,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
     // upload video & multer on multer
     const videoURL = await uploadVideoOnCloudinary(videoLocalPath)
-    const thumbnailURL = await uploadVideoOnCloudinary(thumbnailLocalPath)
+    const thumbnailURL = await uploadImageOnCloudinary(thumbnailLocalPath)
 
     // save to database
     const videoFile = await Video.create({
@@ -75,14 +79,14 @@ const publishAVideo = asyncHandler(async (req, res) => {
         description,
         videoFile: videoURL.url,
         owner: req.user._id,
-        duration: 0,
+        duration: Math.ceil(videoURL.duration),
         thumbnail: thumbnailURL.url
     })
-
     if (!videoFile) {
         throw new ApiError(500, 'Something went wrong while uploading videoFile!!')
     }
 
+        console.log(videoFile);
     return res
         .status(201)
         .json(
@@ -101,7 +105,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
     }
 
     // validate owner
-    if (req.user._id != video.owner) {
+    if (req.user._id.toString() !== video.owner.toString()) {
         throw new ApiError(401, 'Unauthorized user!!')
     }
 
@@ -151,15 +155,18 @@ const updateVideo = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'Video not found!!')
     }
 
-    if (req.user._id != video.owner) {
-        throw new ApiError(401, 'Unauthorized user!!')
+    console.log(req.user._id);
+    console.log(video.owner);
+    if (req.user._id.toString() !== video.owner.toString()) {
+        throw new ApiError(401, 'Unauthorized user!!');
     }
+    
 
     // upload thumbnail to multer
     const thumbnailLocalPath = req.file?.path
 
     if (!thumbnailLocalPath) {
-        throw new ApiError(400, "Avatar file is missing")
+        throw new ApiError(400, "thumbnail file is missing")
     }
 
     // upload on cloudinary
@@ -171,7 +178,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     }
 
     // delete existing thumbnail from cloudinary
-    const imageDeletionResponse = await deleteImageFromCloudinary(req?.user?.thumbnail)
+    const imageDeletionResponse = await deleteImageFromCloudinary(video?.thumbnail)
 
     if (
         !(imageDeletionResponse.result === 'ok')
@@ -182,10 +189,9 @@ const updateVideo = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Image is not deleted!!")
     }
 
-
     // update thumbnail
     const newThumbnail = await Video.findByIdAndUpdate(
-        req.user?._id,
+        videoId,
         {
             $set: {
                 thumbnail: thumbnail.url
@@ -193,6 +199,7 @@ const updateVideo = asyncHandler(async (req, res) => {
         },
         { new: true }
     )
+    console.log(newThumbnail);
     if (!newThumbnail) {
         throw new ApiError(400, "Error while updating thumbnail")
     }
