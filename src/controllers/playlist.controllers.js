@@ -33,6 +33,10 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'Playlist not found')
     }
 
+    if (!(playlist.owner.toString() === req?.user?._id.toString())) {
+        throw new ApiError(403, 'You are not authorized to access this playlist')
+    }
+
     return res
         .status(200)
         .json(new ApiResponse(200, playlist, 'Playlist retrieved successfully'))
@@ -109,7 +113,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(404,'Playlist not found')
     }
 
-    if(!(playlist.owner === req?.user?._id)){
+    if(!(playlist.owner.toString() === req?.user?._id.toString())){
         throw new ApiError(403,'You are not authorized to access this playlist')
     }
 
@@ -149,7 +153,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(404,'Playlist not found')
     }
 
-    if(!(playlist.owner === req?.user?._id)){
+    if(!(playlist.owner.toString() === req?.user?._id.toString())){
         throw new ApiError(403,'You are not authorized to access this playlist')
     }
 
@@ -180,15 +184,13 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         )
 })
 const getUserPlaylists = asyncHandler(async (req, res) => {
-    const { playlistId } = req.params
-
-    const playlist = await Playlist.findById(playlistId)
+    const playlist = await Playlist.find(req.user?._id)
 
     if (!playlist) {
         throw new ApiError(404, 'Playlist not found')
     }
 
-    if (!(playlist.owner === req?.user?._id)) {
+    if (!(playlist.owner.toString() === req?.user?._id.toString())) {
         throw new ApiError(403, 'You are not authorized to access this playlist')
     }
 

@@ -398,7 +398,7 @@ const addVideoToWatchHistory = asyncHandler(async (req, res) => {
     }
 
     if (
-        !(video.owner === req.user?._id)
+        !(video.owner.toString() === req.user?._id.toString())
     ) {
         throw new ApiError(403, "You are not allowed to add this video to watch history")
     }
@@ -431,7 +431,7 @@ const removeVideoFromWatchHistory = asyncHandler(async (req, res) => {
     }
 
     if (
-        !(video.owner === req.user?._id)
+        !(video.owner.toString() === req.user?._id.toString())
     ) {
         throw new ApiError(403, "You are not allowed to add this video to watch history")
     }
