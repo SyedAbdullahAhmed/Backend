@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String, // cloudinary url
-        required: true,
     },
     coverImage: {
         type: String, // cloudinary url
@@ -88,3 +87,24 @@ userSchema.methods.generateRefreshToken = function () {
 }
 
 export const User = mongoose.model('User', userSchema)
+
+// VIDEO
+// 1)upload video
+// 2)delete video
+// update fields
+// views on video
+
+// USER
+// watch history
+//// getUserChannelProfile
+
+// PLAYLIST
+// create
+// update details
+// add videos
+
+// find user id using jwt
+// get video id
+// push to user's watch history
+
+

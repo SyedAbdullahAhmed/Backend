@@ -13,7 +13,9 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" })) // eneeded data f
 app.use(express.static("public")) // static data or files
 
 import userRouter from './routes/user.routes.js'
+import videoRouter from './routes/video.routes.js'
 
 app.use('/api/v1/users',userRouter)
+app.use('/api/v1/videos',videoRouter)
 
 export { app }
