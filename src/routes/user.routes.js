@@ -7,7 +7,6 @@ import {
     changeCurrentPassword,
     getCurrentUser,
     updateAccountDetails,
-    updateAccountDetails,
     updateUserAvatar,
     updateUserCoverImage
 } from '../controllers/user.controllers.js'
@@ -37,8 +36,8 @@ router.route("/current-user").get(verifyJWT,getCurrentUser)
 
 // TODO : Test below routes
 // DELETE: delete avatar or coverImage from cloudinary after update a new one
-router.route("/update-user-details").put(verifyJWT,updateAccountDetails)
-router.route("/update-user-avatar").put(verifyJWT,updateUserAvatar)
-router.route("/update-user-coverImage").put(verifyJWT,updateUserCoverImage)
+router.route("/update-user-details").patch(verifyJWT,updateAccountDetails)
+router.route("/update-user-avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
+router.route("/update-user-coverImage").patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage)
 
 export default router
